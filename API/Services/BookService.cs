@@ -107,7 +107,7 @@ public class BookService : IBookService
         };
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task<bool> DeleteBookAsync(int id)
     {
         BookModel bookModel = await _bookRepository.GetByIdAsync(id);
         if (bookModel == null)
@@ -115,5 +115,6 @@ public class BookService : IBookService
             throw new NotFoundException("Book not found");
         }
         await _bookRepository.DeleteAsync(bookModel);
+        return true;
     }
 }

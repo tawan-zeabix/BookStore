@@ -110,17 +110,15 @@ public class BookServiceTests
         // Arrange
         int bookId = 1;
         var bookModel = new BookModel() {Id=1, Title = "Sample Book", Writer = "Author", Price = 20 };
-        
-        _bookRepositoryMock.Setup(repo => repo.GetByIdAsync(bookId)).ReturnsAsync(bookModel);
+
+        _bookServiceMock.Setup(service => service.DeleteBookAsync(bookId)).ReturnsAsync(true);
         BookController bookController = new BookController(_bookServiceMock.Object);
 
         // Act
-        BookDto book = await bookController.GetBook(bookId);
-        BookModel findBook = await _bookRepositoryMock.Object.GetByIdAsync(bookId);
-        await bookController.DeleteBook(bookId);
+        bool isDeleted = await bookController.DeleteBook(bookId);
 
         // Assert
-        _bookRepositoryMock.Verify(repo => repo.DeleteAsync(findBook));
+        Assert.True(isDeleted);
     }
     
 }

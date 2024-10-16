@@ -42,8 +42,8 @@ public class BookController
     }
 
     [HttpDelete("{id}")]
-    public async Task DeleteBook(int id)
+    public async Task<bool> DeleteBook(int id)
     {
-        await _bookService.DeleteBookAsync(id);
+        return await _bookService.DeleteBookAsync(id);
     }
 }
