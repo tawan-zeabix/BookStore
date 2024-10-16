@@ -29,15 +29,16 @@ public class BookController
     }
 
     [HttpPost]
-    public async Task AddBook([FromBody] CreateBookDto book)
+    public async Task<BookDto> AddBook([FromBody] CreateBookDto book)
     {
-        await _bookService.AddBookAsync(book);
+        return await _bookService.AddBookAsync(book);
+        
     }
 
     [HttpPut("{id}")]
-    public async Task UpdateBook(int id, [FromBody] CreateBookDto book)
+    public async Task<BookDto> UpdateBook(int id, [FromBody] CreateBookDto book)
     {
-        await _bookService.UpdateBookAsync(book, id);
+        return await _bookService.UpdateBookAsync(book, id);
     }
 
     [HttpDelete("{id}")]

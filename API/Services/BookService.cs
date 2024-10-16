@@ -57,7 +57,7 @@ public class BookService : IBookService
         }
     }
 
-    public async Task AddBookAsync(CreateBookDto book)
+    public async Task<BookDto> AddBookAsync(CreateBookDto book)
     {
         if (string.IsNullOrEmpty(book.Title) || string.IsNullOrEmpty(book.Writer) || string.IsNullOrEmpty(book.Price.ToString()))
         {
@@ -73,10 +73,16 @@ public class BookService : IBookService
             IsActive = true
         };
             
-        await _bookRepository.AddAsync(newBook);
+        BookModel bookCreated = await _bookRepository.AddAsync(newBook);
+        return new BookDto()
+        {
+            Title = bookCreated.Title,
+            Writer = bookCreated.Writer,
+            Price = bookCreated.Price,
+        };
     }
 
-    public async Task UpdateBookAsync(CreateBookDto book, int id)
+    public async Task<BookDto> UpdateBookAsync(CreateBookDto book, int id)
     {
         if (string.IsNullOrEmpty(book.Title) || string.IsNullOrEmpty(book.Writer) || string.IsNullOrEmpty(book.Price.ToString()))
         {
@@ -91,7 +97,14 @@ public class BookService : IBookService
         bookModel.Title = book.Title;
         bookModel.Writer = book.Writer;
         bookModel.Price = book.Price;
-        await _bookRepository.UpdateAsync(bookModel);
+        BookModel bookUpdated = await _bookRepository.UpdateAsync(bookModel);
+
+        return new BookDto()
+        {
+            Title = bookUpdated.Title,
+            Writer = bookUpdated.Writer,
+            Price = bookUpdated.Price,
+        };
     }
 
     public async Task DeleteBookAsync(int id)
