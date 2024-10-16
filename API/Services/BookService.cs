@@ -59,31 +59,34 @@ public class BookService : IBookService
 
     public async Task AddBookAsync(CreateBookDto book)
     {
-        try
+        if (string.IsNullOrEmpty(book.Title) || string.IsNullOrEmpty(book.Writer) || string.IsNullOrEmpty(book.Price.ToString()))
         {
-            BookModel newBook = new BookModel()
-            {
-                Title = book.Title,
-                Writer = book.Writer,
-                Price = book.Price,
-                CreatedBy = "Admin",
-                IsActive = true
-            };
+            throw new BadRequestException("Book Not Valid");  
+        }
             
-            await _bookRepository.AddAsync(newBook);
-        }
-        catch (Exception ex)
+        BookModel newBook = new BookModel()
         {
-            throw new Exception(ex.Message);
-        }
+            Title = book.Title,
+            Writer = book.Writer,
+            Price = book.Price,
+            CreatedBy = "Admin",
+            IsActive = true
+        };
+            
+        await _bookRepository.AddAsync(newBook);
     }
 
     public async Task UpdateBookAsync(CreateBookDto book, int id)
     {
+        if (string.IsNullOrEmpty(book.Title) || string.IsNullOrEmpty(book.Writer) || string.IsNullOrEmpty(book.Price.ToString()))
+        {
+            throw new BadRequestException("Book Not Valid");  
+        }
+        
         BookModel bookModel = await _bookRepository.GetByIdAsync(id);
         if (bookModel == null)
         {
-            throw new Exception("Book not found");
+            throw new NotFoundException("Book Not Found");
         }
         bookModel.Title = book.Title;
         bookModel.Writer = book.Writer;
@@ -96,7 +99,7 @@ public class BookService : IBookService
         BookModel bookModel = await _bookRepository.GetByIdAsync(id);
         if (bookModel == null)
         {
-            throw new Exception("Book not found");
+            throw new NotFoundException("Book not found");
         }
         await _bookRepository.DeleteAsync(bookModel);
     }
