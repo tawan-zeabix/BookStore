@@ -1,4 +1,5 @@
 using API;
+using API.Middlewares;
 using API.Repositories;
 using API.Repositories.Interfaces;
 using API.Services;
@@ -29,7 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionHandling>();
 app.UseAuthorization();
 
 app.MapControllers();

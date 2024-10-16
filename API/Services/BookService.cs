@@ -3,7 +3,7 @@ using API.DTOs.Response;
 using API.Models;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
+using API.Helpers;
 
 namespace API.Services;
 
@@ -15,29 +15,22 @@ public class BookService : IBookService
         _bookRepository = bookRepository;
     }
     
-    public async Task<BookDto> GetBookByIdAsync(int id)
+    public async Task<BookDto?> GetBookByIdAsync(int id)
     {
-        try
+        BookModel book = await _bookRepository.GetByIdAsync(id);
+        if (book == null)
         {
-            BookModel book = await _bookRepository.GetByIdAsync(id);
-            if (book == null)
-            {
-                return new BookDto();
-            }
+            throw new NotFoundException("Book Not Found");
+        }
 
-            BookDto bookDto = new BookDto()
-            {
-                Title = book.Title,
-                Writer = book.Writer,
-                Price = book.Price,
-            };
-            
-            return bookDto;
-        }
-        catch (Exception ex)
+        BookDto bookDto = new BookDto()
         {
-            throw new Exception(ex.Message);
-        }
+            Title = book.Title,
+            Writer = book.Writer,
+            Price = book.Price,
+        };
+            
+        return bookDto;
     }
 
     public async Task<List<BookDto>> GetAllBooksAsync()
