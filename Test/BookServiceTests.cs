@@ -109,7 +109,6 @@ public class BookServiceTests
     {
         // Arrange
         int bookId = 1;
-        var bookModel = new BookModel() {Id=1, Title = "Sample Book", Writer = "Author", Price = 20 };
 
         _bookServiceMock.Setup(service => service.DeleteBookAsync(bookId)).ReturnsAsync(true);
         BookController bookController = new BookController(_bookServiceMock.Object);
